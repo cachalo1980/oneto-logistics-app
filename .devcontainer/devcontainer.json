@@ -3,12 +3,17 @@
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev-workspace",
   "workspaceFolder": "/workspaces/oneto-logistics-app",
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "prisma.prisma",
-    "ms-azuretools.vscode-docker"
-  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "prisma.prisma",
+        "ms-azuretools.vscode-docker",
+        "humao.rest-client"
+      ]
+    }
+  },
   "postCreateCommand": "npm install",
   "remoteUser": "node"
 }
