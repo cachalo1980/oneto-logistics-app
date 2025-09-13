@@ -1,4 +1,3 @@
-// Archivo: .prettierrc.json
 {
   "semi": false,
   "singleQuote": true,
