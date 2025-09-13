@@ -1,25 +1,25 @@
-// Archivo: apps/api/src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ClientesModule } from './clientes/clientes.module';
-import { ProductosModule } from './productos/productos.module';
-import { SolicitudesModule } from './solicitudes/solicitudes.module';
+import { ClientesModule } from './clientes/clientes.module'; // <-- Importar
+import { ProductosModule } from './productos/productos.module'; // <-- Importar
+import { SolicitudesModule } from './solicitudes/solicitudes.module'; // <-- Importar
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    // 1. Cargar las variables de entorno de nuestro archivo .env
+    // Configuración de variables de entorno (ya lo teníamos)
     ConfigModule.forRoot({
-      isGlobal: true, // Hace que el ConfigService esté disponible en toda la app
+      isGlobal: true,
       envFilePath: '.env',
     }),
 
-    // 2. Configurar la conexión a la base de datos usando TypeORM
+    // Configuración de la base de datos (ya lo teníamos)
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule], // Importamos ConfigModule para poder usar ConfigService
+      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -28,19 +28,17 @@ import { SolicitudesModule } from './solicitudes/solicitudes.module';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-
-        // ¡IMPORTANTE! autoLoadEntities y synchronize solo para desarrollo
-        autoLoadEntities: true, // TypeORM cargará automáticamente las entidades que definamos
-        synchronize: true, // TypeORM creará/actualizará las tablas de la DB automáticamente.
-        // Esto es perfecto para desarrollo, pero DEBE ser 'false' en producción.
+        autoLoadEntities: true,
+        synchronize: true,
       }),
     }),
 
+    // --- REGISTRO DE NUESTROS MÓDULOS DE NEGOCIO ---
+    UsersModule,
     ClientesModule,
-
     ProductosModule,
-
     SolicitudesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
