@@ -1,7 +1,7 @@
 ### Iniciar sesión como administrador
 # @name loginAdmin
 
-POST http://localhost:3001/auth/login
+POST http://127.0.0.1:3001/auth/login
 Content-Type: application/json
 
 {
