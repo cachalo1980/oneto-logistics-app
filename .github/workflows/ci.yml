@@ -26,6 +26,6 @@ jobs:
       - name: Linting
         run: npm run lint --if-present # '--if-present' evita errores si el script no existe aún
         
-      # Por ahora no tenemos tests, pero aquí irían
+      # Por ahora no tenemos tests, aquí irían
       # - name: Run tests
       #   run: npm test --if-present
