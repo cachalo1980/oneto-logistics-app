@@ -5,6 +5,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ClientesModule } from './clientes/clientes.module';
+import { ProductosModule } from './productos/productos.module';
+import { SolicitudesModule } from './solicitudes/solicitudes.module';
 
 @Module({
   imports: [
@@ -32,6 +35,12 @@ import { AppService } from './app.service';
         // Esto es perfecto para desarrollo, pero DEBE ser 'false' en producción.
       }),
     }),
+
+    ClientesModule,
+
+    ProductosModule,
+
+    SolicitudesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
