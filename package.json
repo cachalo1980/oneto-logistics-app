@@ -1,0 +1,23 @@
+{
+  "name": "oneto-logistics-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for the Oneto Logistics application, including the customer-facing web app and the backend API.",
+  "private": true,
+  "author": "Frigorifico Oneto",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.2.2"
+  }
+}
