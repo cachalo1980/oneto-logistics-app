@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  dev-workspace:
+    build: .
+    volumes:
+      - ..:/workspaces/${COMPOSE_PROJECT_NAME}:cached
+    command: sleep infinity
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: oneto_user
+      POSTGRES_PASSWORD: a_very_secure_password_for_dev
+      POSTGRES_DB: oneto_logistics_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
