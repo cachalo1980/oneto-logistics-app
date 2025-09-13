@@ -2,7 +2,7 @@
   "name": "Oneto Logistics Dev Environment",
   "dockerComposeFile": "docker-compose.yml",
   "service": "dev-workspace",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "workspaceFolder": "/workspaces/oneto-logistics-app",
   "extensions": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",

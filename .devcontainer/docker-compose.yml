@@ -3,7 +3,9 @@ services:
   dev-workspace:
     build: .
     volumes:
-      - ..:/workspaces/${COMPOSE_PROJECT_NAME}:cached
+      - ..:/workspaces/oneto-logistics-app:cached
+    ports:
+      - "3001:3001"
     command: sleep infinity
     depends_on:
       - db

@@ -1,0 +1,10 @@
+### Iniciar sesión como administrador
+# @name loginAdmin
+
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@oneto.com",
+  "password": "admin"
+}
