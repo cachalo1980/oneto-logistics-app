@@ -15,3 +15,46 @@ Content-Type: application/json
 
 GET http://127.0.0.1:3001/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5Ab25ldG8uY29tIiwicm9sIjoiQURNSU5fT05FVE8iLCJpYXQiOjE3NTc3OTU4NDksImV4cCI6MTc1Nzg4MjI0OX0.n-qSpgEUP8UaABmD3VbtL2SmmUGPKeOmJNcEPfXEUj8
+
+### Iniciar sesión como Usuario Cliente
+# @name loginCliente
+POST http://127.0.0.1:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "cliente@prueba.com",
+  "password": "cliente"
+}
+
+### Obtener MIS solicitudes (como Cliente)
+# @name getMisSolicitudes
+GET http://127.0.0.1:3001/solicitudes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiY2xpZW50ZUBwcnVlYmEuY29tIiwicm9sIjoiQ0xJRU5URSIsImlhdCI6MTc1NzgxMDI5MywiZXhwIjoxNzU3ODk2NjkzfQ.2LnhMnyR4wo_MUiYf0kZ_JIjOX_0cA_2EQgnOlhTJjQ
+
+### Crear una nueva solicitud de INGRESO
+# @name createSolicitud
+
+POST http://127.0.0.1:3001/solicitudes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsImVtYWlsIjoiY2xpZW50ZUBwcnVlYmEuY29tIiwicm9sIjoiQ0xJRU5URSIsImlhdCI6MTc1NzgxMDI5MywiZXhwIjoxNzU3ODk2NjkzfQ.2LnhMnyR4wo_MUiYf0kZ_JIjOX_0cA_2EQgnOlhTJjQ
+
+
+{
+  "tipo": "INGRESO",
+  "fechaProgramada": "2025-09-20",
+  "horaAproximada": "10:30",
+  "patenteVehiculo": "AE 123 FG",
+  "datosConductor": "Juan Perez DNI 12.345.678",
+  "detalles": [
+    {
+      "productoId": 1,
+      "cantidad": 10,
+      "unidadMedida": "Cajas"
+    },
+    {
+      "productoId": 2,
+      "cantidad": 5,
+      "unidadMedida": "Pallets"
+    }
+  ]
+}

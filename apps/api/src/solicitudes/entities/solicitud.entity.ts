@@ -125,3 +125,5 @@ export class Solicitud {
   })
   detalles: DetalleSolicitud[];
 }
+
+export { DetalleSolicitud };

@@ -2,12 +2,21 @@
 import { Module } from '@nestjs/common';
 import { SeedService } from './seed.service';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from '../users/users.module'; // Importamos UsersModule
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity'; // Importamos la entidad User directamente
+import { User } from '../users/entities/user.entity';
+import { Cliente } from '../clientes/entities/cliente.entity';
+import { Producto } from '../productos/entities/producto.entity';
+// import {
+// (Solicitud,
+//  DetalleSolicitud,
+// } from '../solicitudes/entities/solicitud.entity';
 
 @Module({
-  imports: [ConfigModule, UsersModule, TypeOrmModule.forFeature([User])], // Añadimos los módulos
+  imports: [
+    ConfigModule,
+    // Importamos todas las entidades que el SeedService necesita manipular
+    TypeOrmModule.forFeature([User, Cliente, Producto]),
+  ],
   providers: [SeedService],
 })
 export class SeedModule {}
