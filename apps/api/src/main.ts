@@ -5,9 +5,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SeedService } from './seed/seed.service';
 import { Logger } from '@nestjs/common'; // Importar Logger
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
 
   // Usaremos el logger integrado de NestJS para un formato consistente
   const logger = new Logger('Bootstrap');
