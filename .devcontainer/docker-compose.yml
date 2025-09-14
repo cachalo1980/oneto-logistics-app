@@ -6,6 +6,8 @@ services:
       - ..:/workspaces/oneto-logistics-app:cached
     ports:
       - "127.0.0.1:3001:3001"
+    environment:
+      - TZ=America/Argentina/Buenos_Aires
     command: sleep infinity
     depends_on:
       - db
