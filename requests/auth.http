@@ -8,3 +8,10 @@ Content-Type: application/json
   "email": "admin@oneto.com",
   "password": "admin"
 }
+
+
+### Obtener el perfil del usuario (protegido por JWT)
+# @name getProfile
+
+GET http://127.0.0.1:3001/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoiYWRtaW5Ab25ldG8uY29tIiwicm9sIjoiQURNSU5fT05FVE8iLCJpYXQiOjE3NTc3OTU4NDksImV4cCI6MTc1Nzg4MjI0OX0.n-qSpgEUP8UaABmD3VbtL2SmmUGPKeOmJNcEPfXEUj8
