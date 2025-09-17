@@ -1,30 +1,33 @@
 // Archivo: apps/api/src/main.ts
-// VERSIÓN CORREGIDA
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SeedService } from './seed/seed.service';
-import { Logger } from '@nestjs/common'; // Importar Logger
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const logger = new Logger('Bootstrap');
+
+  // --- HABILITAR CORS ---
+  app.enableCors({
+    origin: 'http://localhost:3000', // Permite peticiones solo desde este origen
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
+  // Configuración de validación global
   app.useGlobalPipes(
     new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
   );
 
-  // Usaremos el logger integrado de NestJS para un formato consistente
-  const logger = new Logger('Bootstrap');
-
-  // Obtenemos una instancia del SeedService para poblar la DB si es necesario
+  // Ejecución del seeder
   const seeder = app.get(SeedService);
   await seeder.run();
 
   const port = 3001;
   await app.listen(port, '0.0.0.0');
 
-  // --- CORRECCIÓN ---
-  // Usamos la variable 'logger' que declaramos arriba.
   logger.log(`🚀 Aplicación corriendo en http://localhost:${port}`);
 }
 bootstrap();

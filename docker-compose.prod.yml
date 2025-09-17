@@ -1,0 +1,29 @@
+# Archivo: docker-compose.prod.yml
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: always
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: always
+    env_file: ./apps/api/.env.prod
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file: ./apps/api/.env.prod
+
+volumes:
+  postgres_data:
+    name: oneto_postgres_data
