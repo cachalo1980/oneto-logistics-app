@@ -1,36 +1,41 @@
-# Archivo: apps/api/Dockerfile (VERSIÓN FINAL Y ROBUSTA)
+# Archivo: apps/api/Dockerfile (VERSIÓN FINAL DEFINITIVA)
 
-# --- Stage 1: Build - Prepara e instala todo ---
+# --- Stage 1: Builder ---
+# Instala todas las dependencias y construye el código fuente
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copia los manifiestos de paquetes
+# Copia todos los manifiestos de paquetes
 COPY package*.json ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
-# Instala TODAS las dependencias
+# Instala TODAS las dependencias (incluidas dev)
 RUN npm install
 
-# Copia todo el código fuente
+# Copia el resto del código fuente
 COPY . .
     
-# Construye la aplicación de API
+# Construye la aplicación
 RUN npm run build -w @oneto/api
 
-
-# --- Stage 2: Production - Ensambla la imagen final ---
+# --- Stage 2: Production ---
+# Crea la imagen final, limpia y optimizada
 FROM node:18-alpine
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# ¡CAMBIO CLAVE! Copiamos la carpeta node_modules completa desde el builder.
-# No volvemos a ejecutar 'npm install'.
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+# ¡PASO CLAVE! Copiamos los package.json para crear un entorno de producción limpio
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/apps/api/package.json ./apps/api/
+# No necesitamos el package.json de 'web' aquí
 
-# Copiamos la aplicación ya construida
+# Instalamos SOLAMENTE las dependencias de producción basándonos en el package-lock.json
+# Esto crea un 'node_modules' limpio y correcto para producción.
+RUN npm install --omit=dev
+
+# Copiamos la aplicación ya construida desde el stage 'builder'
 COPY --from=builder /app/apps/api/dist ./dist
 
 # Copiamos los datos del seeder
