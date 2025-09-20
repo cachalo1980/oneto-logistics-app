@@ -1,15 +1,21 @@
-# Archivo: apps/web/Dockerfile (VERSIÓN FINAL CON BASE DEBIAN)
+# Archivo: apps/web/Dockerfile
 
-# --- Stage 1: Builder ---
-FROM node:18-bullseye-slim AS builder 
+# --- Stage 1: Build ---
+FROM node:18-bullseye-slim AS builder
 WORKDIR /app
+RUN npm install -g pnpm
 COPY . .
-RUN npm install
+
+# --- ¡CAMBIO CLAVE! ---
+ENV CI=true
+RUN pnpm install --frozen-lockfile
+
 ENV NEXT_PUBLIC_API_URL=/api
-RUN npm run build -w @oneto/web
+RUN pnpm --filter @oneto/web build
 
 # --- Stage 2: Production ---
-FROM node:18-bullseye-slim 
+# La etapa de producción del web no ejecuta 'pnpm install', por lo que no necesita el cambio.
+FROM node:18-bullseye-slim
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/apps/web/.next/standalone ./

@@ -1,0 +1,3 @@
+# Archivo: pnpm-workspace.yaml
+packages:
+  - 'apps/*'
