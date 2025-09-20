@@ -11,7 +11,7 @@ async function bootstrap() {
 
   // --- HABILITAR CORS ---
   app.enableCors({
-    origin: 'http://localhost:3000', // Permite peticiones solo desde este origen
+    origin: 'http://onetoc.caruao.cloud', // Permite peticiones solo desde este origen
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
