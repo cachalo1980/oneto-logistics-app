@@ -8,7 +8,7 @@ COPY . .
 
 # --- ¡CAMBIO CLAVE! ---
 ENV CI=true
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --unsafe-perm=true --frozen-lockfile
 
 ENV NEXT_PUBLIC_API_URL=/api
 RUN pnpm --filter @oneto/web build

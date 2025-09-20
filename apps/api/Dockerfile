@@ -24,7 +24,8 @@ COPY --from=builder /app/pnpm-workspace.yaml ./
 
 # --- ¡CAMBIO CLAVE! ---
 ENV CI=true
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --unsafe-perm=true --frozen-lockfile
+RUN pnpm install --prod --unsafe-perm=true --frozen-lockfile
 
 COPY --from=builder /app/apps/api/dist ./dist
 COPY --from=builder /app/apps/api/src/seed/data ./src/seed/data
