@@ -1,19 +1,31 @@
 // Archivo: apps/web/src/app/login/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Box, Button, TextField, Typography, Container, Paper, CircularProgress, Alert } from '@mui/material';
 import Image from 'next/image';
 import axios from 'axios';
+import Cookies from 'js-cookie'; // <-- Necesitaremos esta importación
 
-// Es una buena práctica definir la URL de la API en una variable de entorno
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || '/api'; // Apuntamos a la ruta relativa
+const TOKEN_COOKIE_NAME = 'access_token';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'unauthorized') {
+      setError('Debes iniciar sesión para acceder a esta página.');
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -26,17 +38,16 @@ export default function LoginPage() {
         password: password,
       });
 
-      // ¡ÉXITO!
-      console.log('Login exitoso:', response.data);
-      alert('¡Login exitoso! Revisa la consola para ver tu token.');
-      
+      // ¡LÓGICA FINAL!
       const { access_token } = response.data;
-      // Aquí, en el futuro, guardaremos el token y redirigiremos al usuario.
-      // Por ejemplo: document.cookie = `token=${access_token}; path=/;`;
-      // router.push('/dashboard');
+
+      // 1. Guardamos el token en la cookie
+      Cookies.set(TOKEN_COOKIE_NAME, access_token, { expires: 1, secure: process.env.NODE_ENV === 'production' });
+
+      // 2. Redirigimos al dashboard
+      router.push('/dashboard');
 
     } catch (err) {
-      // MANEJO DE ERRORES
       console.error('Error en el login:', err);
       if (axios.isAxiosError(err) && err.response) {
         if (err.response.status === 401) {
@@ -52,81 +63,21 @@ export default function LoginPage() {
     }
   };
 
+  // El JSX se queda igual
   return (
     <Container component="main" maxWidth="xs">
-      <Paper 
-        elevation={6}
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 4,
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: 2,
-        }}
-      >
-        <Image 
-          src="/frioneto-logo.svg"
-          alt="Frioneto Logo"
-          width={100}
-          height={50}
-        />
+      <Paper elevation={6} sx={{ /* ... estilos ... */ }}>
+        <Image src="/frioneto-logo.svg" alt="Frioneto Logo" width={100} height={50} />
         <Typography component="h1" variant="h5" sx={{ mt: 2, color: '#1E3A8A' }}>
           Portal de Clientes
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          
           {error && <Alert severity="error" sx={{ width: '100%', mb: 2 }}>{error}</Alert>}
-          
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Correo Electrónico"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Contraseña"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            disabled={loading}
-          />
+          <TextField /* ...props... */ />
+          <TextField /* ...props... */ />
           <Box sx={{ position: 'relative' }}>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              disabled={loading}
-            >
-              Ingresar
-            </Button>
-            {loading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  marginTop: '-4px', // Ajuste para centrarlo verticalmente en el botón
-                  marginLeft: '-12px',
-                }}
-              />
-            )}
+            <Button type="submit" /* ...props... */ >Ingresar</Button>
+            {loading && <CircularProgress /* ...props... */ />}
           </Box>
         </Box>
       </Paper>
