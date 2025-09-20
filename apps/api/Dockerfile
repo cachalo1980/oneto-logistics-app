@@ -1,43 +1,39 @@
-# Archivo: apps/api/Dockerfile (VERSIÓN ROBUSTA)
+# Archivo: apps/api/Dockerfile (VERSIÓN FINAL Y ROBUSTA)
 
-# --- Stage 1: Base - Instala todas las dependencias ---
-FROM node:18-alpine AS base
+# --- Stage 1: Build - Prepara e instala todo ---
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copiamos solo los archivos de manifiesto primero para cachear las dependencias
+# Copia los manifiestos de paquetes
 COPY package*.json ./
 COPY apps/api/package.json ./apps/api/
 COPY apps/web/package.json ./apps/web/
 
-# Instalamos TODAS las dependencias, incluidas las de desarrollo
+# Instala TODAS las dependencias
 RUN npm install
 
-# --- Stage 2: Build - Construye la aplicación ---
-FROM base AS build
-WORKDIR /app
-
-# Copiamos todo el código fuente encima de las dependencias ya instaladas
+# Copia todo el código fuente
 COPY . .
-
-# Construimos la API
+    
+# Construye la aplicación de API
 RUN npm run build -w @oneto/api
 
-# --- Stage 3: Production - Crea la imagen final limpia ---
-FROM node:18-alpine AS production
+
+# --- Stage 2: Production - Ensambla la imagen final ---
+FROM node:18-alpine
 WORKDIR /app
 
-# Copiamos el package.json de la API y el de la raíz para instalar solo las deps de producción
-COPY --from=base /app/package*.json ./
-COPY --from=base /app/apps/api/package.json ./apps/api/
+ENV NODE_ENV=production
 
-# ¡Paso clave! Instalamos SOLO las dependencias de PRODUCCIÓN
-RUN npm install --workspace @oneto/api --omit=dev
+# ¡CAMBIO CLAVE! Copiamos la carpeta node_modules completa desde el builder.
+# No volvemos a ejecutar 'npm install'.
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
-# Copiamos la aplicación ya construida desde el stage de 'build'
-COPY --from=build /app/apps/api/dist ./dist
+# Copiamos la aplicación ya construida
+COPY --from=builder /app/apps/api/dist ./dist
 
 # Copiamos los datos del seeder
-COPY --from=build /app/apps/api/src/seed/data ./src/seed/data
+COPY --from=builder /app/apps/api/src/seed/data ./src/seed/data
 
-# El comando de ejecución no cambia
 CMD [ "node", "dist/main" ]
