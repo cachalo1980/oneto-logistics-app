@@ -9,4 +9,4 @@ RUN pnpm install --frozen-lockfile --unsafe-perm=true
 ENV NEXT_PUBLIC_API_URL=/api
 RUN pnpm --filter @oneto/web build
 EXPOSE 3000
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "server.js"]

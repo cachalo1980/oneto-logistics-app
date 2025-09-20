@@ -19,4 +19,4 @@ RUN pnpm install --frozen-lockfile --unsafe-perm=true
 RUN pnpm --filter @oneto/api build
 
 # El comando de inicio usa la carpeta 'dist' que acabamos de crear
-CMD [ "node", "dist/main" ]
+CMD [ "node", "dist/main.js" ]
